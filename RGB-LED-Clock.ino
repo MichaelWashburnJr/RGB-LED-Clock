@@ -104,6 +104,12 @@ void loop() {
  /*
  Updates each hand of the clock face to reflect the actual time. */
  void UpdateClockHands(){
+   /* 0 <= fadePercent <= 1
+    fadePercent is the percent of brightness the first hand led should have.
+    1 - fadePercent is the percent of brightness the led after the first hand
+    led should have. (fades the led to the next led depending on how far along
+    the time is.  mimicks real clock hands moving between numbers. ). */ 
+   float fadePercent = 1; 
    SetAllLedValues(0,0,0);
    /* Set the multiplier to one if the current time is during the day */
    byte brightness = 255;
@@ -116,19 +122,29 @@ void loop() {
    /* Update the hour hand --------------------------------------------------*/
    /* Set the hour hand */
    hourLed = hour() % 12;
-   Leds[hourLed].r = brightness;
+   fadePercent = 60 - minute();
+   fadePercent /= 60;
+   Leds[hourLed].r = brightness * fadePercent;
+   Leds[(hourLed+1)%12].r = brightness * (1-fadePercent);
    
    /* Update the minute hand ------------------------------------------------*/
    /* Set the minute hand */
    minuteLed = minute()/5;
-   Leds[minuteLed].g = brightness;
+   fadePercent = 5-((minute() + second()/60) % 5);
+   fadePercent /= 5;
+   Leds[minuteLed].g = brightness * fadePercent;
+   Leds[(minuteLed+1)%12].g = brightness * (1-fadePercent);
   
    /* Update the seconds hand -----------------------------------------------*/
    /* Dont display the seconds hand during night time */
    if(!IsNightTime()){
      /*Set the second hand */
      secondLed = second()/5;
-     Leds[secondLed].b = brightness;
+     fadePercent = 5 - (second()%5);
+     fadePercent /= 5;
+     Leds[secondLed].b = brightness * fadePercent;
+     Leds[(secondLed+1)%12].b = brightness * (1-fadePercent);
+     
    }
   
   SetLeds();
