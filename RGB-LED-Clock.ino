@@ -75,6 +75,8 @@ void loop() {
   if(timeStatus() != timeNotSet){
     //Show the time
     UpdateClockHands();
+  } else{/* else, flash leds in some manor */
+    CycleLeds(500);
   }
 }//end of main loop
 
@@ -102,6 +104,7 @@ void loop() {
  /*
  Updates each hand of the clock face to reflect the actual time. */
  void UpdateClockHands(){
+   SetAllLedValues(0,0,0);
    /* Set the multiplier to one if the current time is during the day */
    byte brightness = 255;
    /* Set brightness to 5 if it is night time */
@@ -111,20 +114,11 @@ void loop() {
    }
    
    /* Update the hour hand --------------------------------------------------*/
-   /* If the old position needs to be blanked */
-   if(hourLed >= 0){
-     Leds[hourLed].r = 0;
-   }
    /* Set the hour hand */
    hourLed = hour() % 12;
    Leds[hourLed].r = brightness;
    
    /* Update the minute hand ------------------------------------------------*/
-   /* If the old position needs to be blanked */
-   if(minuteLed >= 0)
-   {
-     Leds[minuteLed].g = 0;
-   }
    /* Set the minute hand */
    minuteLed = minute()/5;
    Leds[minuteLed].g = brightness;
@@ -132,10 +126,6 @@ void loop() {
    /* Update the seconds hand -----------------------------------------------*/
    /* Dont display the seconds hand during night time */
    if(!IsNightTime()){
-     /* If the old position needs to be blanks */
-     if(secondLed >= 0){
-       Leds[secondLed].b = 0;
-     }
      /*Set the second hand */
      secondLed = second()/5;
      Leds[secondLed].b = brightness;
@@ -193,6 +183,46 @@ time_t requestSync()
 /*---------------------------------------------------------------------------*
  * LED Functions
  *---------------------------------------------------------------------------*/
+ 
+ /*
+ Set all leds to red, green, or blue, then shift them repetedly, clockwise,
+ one full cycle (3 shifts clockwise). */
+ void CycleLeds(int timeout){
+   rgb colors[3] = {
+     {255,0,0},
+     {0,255,0},
+     {0,0,255}
+   };
+   int colorIndex = 0;
+   /* Set all leds to be individually all red, then all green, then all blue,
+      in that order, until there are no more leds to set */
+   for(int i = 0; i < 36; i++){ /* 36 = 12 leds * 3 iterations */
+     Leds[i%12].r = colors[colorIndex].r;
+     Leds[i%12].g = colors[colorIndex].g;
+     Leds[i%12].b = colors[colorIndex].b;
+     
+     /* After all 12 leds have been set delay*/
+     if(i % 12 == 0)
+     {
+       SetLeds();
+       delay(100);
+       /* increment color index by an extra one */
+       colorIndex++;
+     }
+     /* Increment the color index by one */
+     colorIndex = (colorIndex + 1) % 3;
+   }
+ }
+ 
+/*
+Sets all leds to the value but doesn't shift out. */
+void SetAllLedValues(byte r, byte g, byte b){
+  for(int i = 0; i < 12; i++){
+    Leds[i].r = r;
+    Leds[i].g = g;
+    Leds[i].b = b;
+  }
+}
 
 /*
 Adjust the RGB values for their different resistances.  I.e., red is less
