@@ -122,10 +122,7 @@ void loop() {
    /* Update the hour hand --------------------------------------------------*/
    /* Set the hour hand */
    hourLed = hour() % 12;
-   fadePercent = 60 - minute();
-   fadePercent /= 60;
-   Leds[hourLed].r = brightness * fadePercent;
-   Leds[(hourLed+1)%12].r = brightness * (1-fadePercent);
+   Leds[hourLed].r = brightness;
    
    /* Update the minute hand ------------------------------------------------*/
    /* Set the minute hand */
