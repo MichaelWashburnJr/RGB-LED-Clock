@@ -182,7 +182,7 @@ void processSyncMessage() {
      if( pctime >= DEFAULT_TIME) { // check the integer is a valid time (greater than Jan 1 2013)
        Serial.println("Time Set");  
        setTime(pctime); // Sync Arduino clock to the time received on the serial port
-       adjustTime(-18000);
+       adjustTime(-1*(4*3600));
      }
   }
 }
