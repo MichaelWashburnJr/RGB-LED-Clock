@@ -25,4 +25,4 @@ python sync.py [Com Port Number]
 - 22 Gauge wire (different colors is preferable)
 
 ###Circuit Diagram:
-![alt tag](https://github.com/mdw7326/RGB-LED-Clock/blob/master/Circuit_Diagram.svg)
+![alt tag](https://github.com/mdw7326/RGB-LED-Clock/blob/master/Circuit_Diagram.png)
