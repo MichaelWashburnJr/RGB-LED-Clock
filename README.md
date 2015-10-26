@@ -17,6 +17,10 @@ python sync.py [Com Port Number]
 ```
 
 ##Current Configuration:
+
+###Libraries:
+- [ShiftPWM](http://www.elcojacobs.com/shiftpwm/)
+
 ###Hardware:
 - 1x Arduino Uno
 - 12x Common Anode RGB LED
