@@ -19,7 +19,7 @@ def print_usage():
 	"""
 	print("Usage: python sync.py C")
 	print(" Arguments:")
-	print("   - C: An integer representing the COM port to transmit to.")
+	print("   - C: The comm port. Ex: COM1")
 
 def to_byte_array(string):
 	"""
@@ -33,15 +33,9 @@ def main():
 		print_usage()
 		return 0
 	#parse the com port
-	com = 0
-	try:
-		com = int(sys.argv[1])
-	except:
-		print_usage()
-		return 0
-	
+	com = sys.argv[1]
 	#Arguments are good, send the message
-	ser = serial.Serial("COM%d" % com)	#connect to the serial port
+	ser = serial.Serial(com)	#connect to the serial port
 	#wait until the arduino is ready
 	ser.readline()
 	epoch = int(time.time())			#get the epoch time
